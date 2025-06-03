@@ -4,55 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HTML Runner App</title>
-              <!-- Google Analytics & FPS Counter Script -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EZ803GFYKZ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-EZ803GFYKZ');
-</script>
-<div id="fpsCounter" class="fps-counter"></div>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const fpsCounter = document.createElement('div');
-    fpsCounter.id = 'fpsCounter';
-    document.body.appendChild(fpsCounter);
 
-    Object.assign(fpsCounter.style, {
-      position: 'fixed',
-      top: '10px',
-      left: '10px',
-      zIndex: '99999',
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
-      color: '#00b5ff',
-      padding: '5px 10px',
-      borderRadius: '5px',
-      fontFamily: "'Courier New', monospace",
-      fontSize: '14px',
-      pointerEvents: 'none',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)'
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EZ803GFYKZ"></script>
+  <script>
+    window.addEventListener('load', () => {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-EZ803GFYKZ');
     });
+  </script>
 
-    let frameCount = 0;
-    let fps = 0;
-    let lastTime = performance.now();
+  <!-- FPS Counter -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const fpsCounter = document.createElement('div');
+      fpsCounter.id = 'fpsCounter';
+      document.body.appendChild(fpsCounter);
+      fpsCounter.classList.add('fps-counter');
 
-    function calculateFPS() {
-      frameCount++;
-      const currentTime = performance.now();
+      let frameCount = 0;
+      let fps = 0;
+      let lastTime = performance.now();
 
-      if (currentTime - lastTime >= 100) {
-        fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-        lastTime = currentTime;
-        frameCount = 0;
-        fpsCounter.textContent = `FPS: ${fps}`;
+      function calculateFPS() {
+        frameCount++;
+        const currentTime = performance.now();
+
+        if (currentTime - lastTime >= 1000) { // Adjusted to update every second
+          fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+          lastTime = currentTime;
+          frameCount = 0;
+          fpsCounter.textContent = `FPS: ${fps}`;
+        }
+        requestAnimationFrame(calculateFPS);
       }
-      setTimeout(calculateFPS, 0);
-    }
-    calculateFPS();
-  });
-</script>
+      calculateFPS();
+    });
+  </script>
 
   <style>
     body {
@@ -61,9 +51,9 @@
       background-color: #2f2f2f;
     }
     
-      h1, p {
-        color: #e5e5e5;
-      }  
+    h1, p {
+      color: #e5e5e5;
+    }
 
     .container {
       display: flex;
@@ -72,7 +62,7 @@
       margin-bottom: 20px;
     }
 
-    textarea, iframe {
+    textarea {
       width: 100%;
       max-width: 500px;
       height: 400px;
@@ -84,8 +74,24 @@
       resize: vertical;
       background: #000000;
       box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
-        color: white;
+      color: white;
     }
+    
+    iframe {
+      width: 100%;
+      max-width: 500px;
+      height: 400px;
+      padding: 10px;
+      border: 1px solid black;
+      border-radius: 8px;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      resize: vertical;
+      background: #ffffff;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+      color: white;
+    }    
+    
 
     button {
       padding: 12px 20px;
@@ -99,30 +105,46 @@
       transition: background 0.3s ease;
     }
 
-    button:hover {
+    button:hover, button:active {
       background: #242424;
     }
 
-    button:active {
-      background: #242424;
+    .fps-counter {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 99999;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #00b5ff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      pointer-events: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
   </style>
 </head>
 <body>
   <h1>Innovation HTML Compiler</h1>
   <p>Type your HTML code into the editor and click "Run HTML" to observe the magic unfold...</p>
-      <button onclick="runHTML()">Run HTML</button>
-    <br><p></p>
   
+  <button onclick="runHTML()">Run HTML</button>
+  <br><p></p>
+
   <div class="container">
     <textarea id="htmlCode" placeholder="Enter your HTML here..."></textarea>
     <iframe id="preview"></iframe>
   </div>
-  
+
   <script>
     function runHTML() {
-      var code = document.getElementById("htmlCode").value;
-      document.getElementById("preview").srcdoc = code;
+      try {
+        var code = document.getElementById("htmlCode").value;
+        document.getElementById("preview").srcdoc = code;
+      } catch (error) {
+        alert("Invalid HTML detected. Please fix errors before running.");
+      }
     }
   </script>
 </body>
