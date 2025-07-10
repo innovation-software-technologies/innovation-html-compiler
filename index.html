@@ -137,14 +137,33 @@
   <br><p></p>
 
   <div class="container">
-    <textarea id="htmlCode" placeholder="Enter your HTML here..."></textarea>
+    <textarea id="editor" placeholder="Enter your HTML here..."></textarea>
     <iframe id="preview"></iframe>
   </div>
+
+      <script>
+        const editor = document.getElementById("editor");
+        const rowsInput = document.getElementById("rows");
+        const columnsInput = document.getElementById("columns");
+
+        // Load saved text
+        editor.value = localStorage.getItem("savedText") || "";
+
+        // Save changes automatically
+        editor.addEventListener("input", () => {
+            localStorage.setItem("savedText", editor.value);
+        });
+
+        function updateSettings() {
+            document.documentElement.style.setProperty("--columns", columnsInput.value);
+            document.documentElement.style.setProperty("--rows", rowsInput.value);
+        }
+    </script>
 
   <script>
     function runHTML() {
       try {
-        var code = document.getElementById("htmlCode").value;
+        var code = document.getElementById("editor").value;
         document.getElementById("preview").srcdoc = code;
       } catch (error) {
         alert("Invalid HTML detected. Please fix errors before running.");
